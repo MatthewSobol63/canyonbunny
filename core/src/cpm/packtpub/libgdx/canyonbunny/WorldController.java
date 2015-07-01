@@ -89,13 +89,13 @@ public class WorldController extends InputAdapter {
 
         float sprMoveSpeed = 5 * deltaTime;
         // Selected Sprite Controls
-        if (Gdx.input.isKeyPressed(Input.Keys.A))
+        if (Gdx.input.isKeyPressed(Input.Keys.F))
             moveSelectedSprite(-sprMoveSpeed, 0);
-        if (Gdx.input.isKeyPressed(Input.Keys.D))
+        if (Gdx.input.isKeyPressed(Input.Keys.H))
             moveSelectedSprite(sprMoveSpeed, 0);
-        if (Gdx.input.isKeyPressed(Input.Keys.W))
+        if (Gdx.input.isKeyPressed(Input.Keys.T))
             moveSelectedSprite(0, sprMoveSpeed);
-        if (Gdx.input.isKeyPressed(Input.Keys.S))
+        if (Gdx.input.isKeyPressed(Input.Keys.G))
             moveSelectedSprite(0, -sprMoveSpeed);
 
         // Camera Controls (move)
