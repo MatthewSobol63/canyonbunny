@@ -15,7 +15,7 @@ import cpm.packtpub.libgdx.canyonbunny.util.Constants;
  */
 public class Assets implements Disposable, AssetErrorListener {
     public static final String TAG = Assets.class.getName();
-    private static Assets _instance;
+    public static final Assets instance = new Assets();
 
     public AssetBunny bunny;
     public AssetsRock rock;
@@ -24,16 +24,9 @@ public class Assets implements Disposable, AssetErrorListener {
     public AssetLevelDecoration levelDecoration;
     private AssetManager assetManager;
 
-    public static Assets getInstance() {
-        if (_instance == null) {
-            _instance = new Assets();
-        }
-        return _instance;
-    }
-
     private Assets() { }
 
-    public Assets init(AssetManager assetManager) {
+    public void init(AssetManager assetManager) {
         this.assetManager = assetManager;
         //set assetManager error handler
         assetManager.setErrorListener(this);
@@ -58,7 +51,6 @@ public class Assets implements Disposable, AssetErrorListener {
         goldCoin = new AssetsGoldCoin(atlas);
         feather = new AssetsFeather(atlas);
         levelDecoration = new AssetLevelDecoration(atlas);
-        return Assets.this;
     }
 
     @Override

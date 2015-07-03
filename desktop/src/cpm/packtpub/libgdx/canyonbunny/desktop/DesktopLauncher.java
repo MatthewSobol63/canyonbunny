@@ -7,12 +7,11 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import cpm.packtpub.libgdx.canyonbunny.CanyonBunnyMain;
 
 public class DesktopLauncher {
-	private static boolean rebuildAtlas = true;
-	private static boolean drawDebugOutline = true;
+	private static boolean rebuildAtlas = false;
+	private static boolean drawDebugOutline = false;
 
 	public static void main (String[] arg) {
 		if (rebuildAtlas) {
-			System.out.println(System.getProperty("user.dir"));
 			TexturePacker.Settings settings = new TexturePacker.Settings();
 			settings.maxWidth = 1024;
 			settings.maxHeight = 1024;
