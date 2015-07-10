@@ -1,7 +1,6 @@
 package cpm.packtpub.libgdx.canyonbunny.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
@@ -101,10 +100,10 @@ public class Level {
 
     public void render (SpriteBatch batch) {
         mountains.render(batch);
-        clouds.render(batch);
-        waterOverlay.render(batch);
         for (Rock rock : rocks) {
             rock.render(batch);
         }
+        waterOverlay.render(batch);
+        clouds.render(batch);
     }
 }

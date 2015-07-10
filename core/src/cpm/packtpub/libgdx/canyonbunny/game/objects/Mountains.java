@@ -27,7 +27,7 @@ public class Mountains extends AbstractGameObject {
 
         // shift mountain and extend length
         origin.x = -dimension.x * 2;
-        length += dimension.x * 2;
+        length += dimension.x * 2; //at least on mountain
     }
 
     private void drawMountain (SpriteBatch batch, float offsetX, float offsetY, float tintColor) {
