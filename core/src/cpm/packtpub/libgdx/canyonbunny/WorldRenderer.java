@@ -53,10 +53,14 @@ public class WorldRenderer implements Disposable {
         batch.begin();
         //render score (top left edge)
         renderGuiScore(batch);
+        //render feather power-up icon
+        renderGuiFeatherPowerUp(batch);
         //render extra lives (top right edge)
         renderGuiExtraLive(batch);
         //render fps count (bottom right edge)
         renderGuiFpsCounter(batch);
+        //render game over message (if needed)
+        renderGuiGameOverMessage(batch);
         batch.end();
     }
 
@@ -71,7 +75,7 @@ public class WorldRenderer implements Disposable {
         float x = cameraGUI.viewportWidth - 50 - Constants.LIVES_START * 50;
         float y = -15;
         for (int i = 0; i < Constants.LIVES_START; i++) {
-            if (i > worldController.lives) {
+            if (i >= worldController.lives) {
                 batch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
             }
             batch.draw(Assets.instance.bunny.head, x + i * 50, y, 50, 50, 120, 100,
@@ -94,6 +98,37 @@ public class WorldRenderer implements Disposable {
         }
         fpsFont.draw(batch, "FPS" + fps, x, y);
         fpsFont.setColor(1, 1, 1, 1);
+    }
+
+    private void renderGuiGameOverMessage(SpriteBatch batch) {
+        float x = cameraGUI.viewportWidth / 2;
+        float y = cameraGUI.viewportHeight / 2;
+        if (worldController.isGameOver()) {
+            BitmapFont fontGameOver = Assets.instance.fonts.defaultBig;
+            fontGameOver.setColor(1, 0.75f, 0.25f, 1);
+            fontGameOver.draw(batch, "GAME OVER", x, y, 0, 5, true);
+            fontGameOver.setColor(1, 1, 1, 1);
+        }
+    }
+
+    private void renderGuiFeatherPowerUp(SpriteBatch batch) {
+        float x = -15;
+        float y = 30;
+        float timeLeftFeatherPowerUp = worldController.level.bunnyHead.timeLeftFeatherPowerup;
+        if (timeLeftFeatherPowerUp > 0) {
+            //start icon face in/out if the left power-up time is less than 4 seconds
+            //the fade interval is set to 5 changes per second
+            if (timeLeftFeatherPowerUp < 4) {
+                if (((int) (timeLeftFeatherPowerUp * 5) % 2) != 0) {
+                    batch.setColor(1, 1, 1, 0.5f);
+                }
+            }
+            batch.draw(Assets.instance.feather.feather, x, y,
+                    50, 50, 100, 100, 0.35f, -0.35f, 0);
+            batch.setColor(1, 1, 1, 1);
+            Assets.instance.fonts.defaultSmall.draw(batch,
+                    Integer.toString((int) timeLeftFeatherPowerUp + 1), x + 60, y + 57);
+        }
     }
 
     public void resize(int width, int height) {

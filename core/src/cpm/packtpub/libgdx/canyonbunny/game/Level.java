@@ -6,7 +6,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
 import cpm.packtpub.libgdx.canyonbunny.game.objects.AbstractGameObject;
+import cpm.packtpub.libgdx.canyonbunny.game.objects.BunnyHead;
 import cpm.packtpub.libgdx.canyonbunny.game.objects.Clouds;
+import cpm.packtpub.libgdx.canyonbunny.game.objects.Feather;
+import cpm.packtpub.libgdx.canyonbunny.game.objects.GoldCoin;
 import cpm.packtpub.libgdx.canyonbunny.game.objects.Mountains;
 import cpm.packtpub.libgdx.canyonbunny.game.objects.Rock;
 import cpm.packtpub.libgdx.canyonbunny.game.objects.WaterOverlay;
@@ -28,13 +31,21 @@ public class Level {
     public Clouds clouds;
     public Mountains mountains;
     public WaterOverlay waterOverlay;
+    //items and player
+    public BunnyHead bunnyHead;
+    public Array<GoldCoin> goldCoins;
+    public Array<Feather> feathers;
 
     public Level (String filename) {
         init(filename);
     }
     private void init (String filename) {
+        //player caracter
+        bunnyHead = null;
         // objects
         rocks = new Array<Rock>();
+        goldCoins = new Array<GoldCoin>();
+        feathers = new Array<Feather>();
         // load image file that represents the level data
         Pixmap pixmap = new Pixmap(Gdx.files.internal(filename));
         // scan pixels from top-left to bottom-right
@@ -68,10 +79,22 @@ public class Level {
                         }
                         break;
                     case Level.BLOCK_PLAYER_SPAWNPOINT:
+                        obj = new BunnyHead();
+                        offsetHeight = -3.0f;
+                        obj.position.set(pixelX, baseHeight * obj.dimension.y + offsetHeight);
+                        bunnyHead = (BunnyHead) obj;
                         break;
                     case Level.BLOCK_ITEM_FEATHER:
+                        obj = new Feather();
+                        offsetHeight = -1.5f;
+                        obj.position.set(pixelX, baseHeight * obj.dimension.y + offsetHeight);
+                        feathers.add((Feather) obj);
                         break;
                     case Level.BLOCK_ITEM_GOLD_COIN:
+                        obj = new GoldCoin();
+                        offsetHeight = -1.5f;
+                        obj.position.set(pixelX, baseHeight * obj.dimension.y + offsetHeight);
+                        goldCoins.add((GoldCoin) obj);
                         break;
                     default:
                         int red = 0xff & (currentPixel >>> 24); //red color channel
@@ -100,10 +123,31 @@ public class Level {
 
     public void render (SpriteBatch batch) {
         mountains.render(batch);
-        for (Rock rock : rocks) {
-            rock.render(batch);
-        }
+        renderGameObjects(rocks, batch);
+        renderGameObjects(goldCoins, batch);
+        renderGameObjects(feathers, batch);
+        bunnyHead.render(batch);
         waterOverlay.render(batch);
         clouds.render(batch);
+    }
+
+    private void renderGameObjects(Array<? extends AbstractGameObject> objects, SpriteBatch batch) {
+        for (AbstractGameObject object : objects) {
+            object.render(batch);
+        }
+    }
+
+    public void update(float deltaTime) {
+        bunnyHead.update(deltaTime);
+        updateGameObjects(rocks, deltaTime);
+        updateGameObjects(goldCoins, deltaTime);
+        updateGameObjects(feathers, deltaTime);
+        clouds.update(deltaTime);
+    }
+
+    private void updateGameObjects(Array<? extends AbstractGameObject> gameObjects, float delteTime) {
+        for (AbstractGameObject object : gameObjects) {
+            object.update(delteTime);
+        }
     }
 }
