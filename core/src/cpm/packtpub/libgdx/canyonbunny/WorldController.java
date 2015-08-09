@@ -5,6 +5,7 @@ package cpm.packtpub.libgdx.canyonbunny;
  */
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -16,6 +17,7 @@ import cpm.packtpub.libgdx.canyonbunny.game.objects.BunnyHead;
 import cpm.packtpub.libgdx.canyonbunny.game.objects.Feather;
 import cpm.packtpub.libgdx.canyonbunny.game.objects.GoldCoin;
 import cpm.packtpub.libgdx.canyonbunny.game.objects.Rock;
+import cpm.packtpub.libgdx.canyonbunny.screens.MenuScreen;
 import cpm.packtpub.libgdx.canyonbunny.util.CameraHelper;
 import cpm.packtpub.libgdx.canyonbunny.util.Constants;
 
@@ -33,9 +35,16 @@ public class WorldController extends InputAdapter {
     private Rectangle r1 = new Rectangle();
     private Rectangle r2 = new Rectangle();
     private float timeLeftGameOverDelay;
+    private Game game;
 
-    public WorldController() {
+    public WorldController(Game game) {
+        this.game = game;
         init();
+    }
+
+    private void backToMenu () {
+    // switch to menu screen
+        game.setScreen(new MenuScreen(game));
     }
 
     private void init () {
@@ -65,7 +74,8 @@ public class WorldController extends InputAdapter {
         if (isGameOver()) {
             timeLeftGameOverDelay -= deltaTime;
             if (timeLeftGameOverDelay < 0) {
-                init();
+                backToMenu();
+                return;
             }
         } else {
             handleGameInput();
@@ -148,6 +158,10 @@ public class WorldController extends InputAdapter {
             case Input.Keys.ENTER:
                 cameraHelper.setTarget(cameraHelper.hasTarget() ? null : level.bunnyHead);
                 Gdx.app.debug(TAG, "Camera follow enabled: " + cameraHelper.hasTarget());
+                return true;
+            case Input.Keys.ESCAPE:
+            case Input.Keys.BACK:
+                backToMenu();
                 return true;
         }
         return false;
